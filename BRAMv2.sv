@@ -1,6 +1,6 @@
     `timescale 1ns / 1ps
     //Read first BRAM
-    //WRITE_FIRST Yapmak için Bypass konulmalý
+    //WRITE_FIRST Yapmak iÃ§in Bypass konulmalÃ½
     module BRAM#(
         parameter DATA_WIDTH=16,
         parameter ADDR_WIDTH=9
@@ -10,7 +10,7 @@
         input wea,//write enable
         input [ADDR_WIDTH-1:0]addra, //address
         input [DATA_WIDTH-1:0]dina, //data_in
-        output reg [DATA_WIDTH-1:0]douta //data_out
+        output [DATA_WIDTH-1:0]douta //data_out
         );
         localparam RAM_DEPTH= 1<<ADDR_WIDTH;
     
