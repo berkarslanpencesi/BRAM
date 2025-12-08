@@ -17,10 +17,10 @@ module BRAM#(
     reg [DATA_WIDTH-1:0] mem [RAM_DEPTH-1:0];
     //READ_FIRST Mode 
     always @(posedge clka)begin
+          douta <= #1 mem[addra];
           if(wea)begin
             mem[addra] <= #1 dina;
           end
-          douta <= #1 mem[addra];
     end
     
 endmodule
