@@ -10,29 +10,32 @@ module sync_fifo #(parameter DEPTH=8, DWIDTH=4, READWIDTH=1)
         output              	empty, 				// FIFO is empty when high
                             	full 				// FIFO is full when high
 );
-    localparam RATIO = DWIDTH/READWIDTH;
-    localparam RATIOLOG = $clog2(RATIO);
-    localparam ADDR_WIDTH = $clog2(DEPTH);
-    localparam READ_WIDTH = ADDR_WIDTH + RATIOLOG;
-    reg [ADDR_WIDTH:0] wrptr; 
-    reg [READ_WIDTH:0] rdptr;
-    reg [DWIDTH-1:0]doutbram;
-    reg wr_ea_bram;
+  localparam RATIO = DWIDTH/READWIDTH;
+  localparam RATIOLOG = $clog2(RATIO);
+  localparam ADDR_WIDTH = $clog2(DEPTH);
+  localparam READ_WIDTH = ADDR_WIDTH + RATIOLOG;
+  reg [ADDR_WIDTH:0] wrptr; 
+  reg [READ_WIDTH:0] rdptr;
+  reg [DWIDTH-1:0]doutbram;
+  reg wr_ea_bram;
     
     
-    assign wr_ea_bram = wr_ea && !full;
+  assign wr_ea_bram = wr_ea && !full;
   reg [RATIOLOG-1:0] rd_ptr_lsb_d;
-   BRAM #(
+  reg [ADDR_WIDTH-1:0] addr_bram;
+   
+  assign addr_bram = wr_ea ? wrptr[ADDR_WIDTH-1:0] : rdptr[READ_WIDTH-1 : RATIOLOG];
+  BRAM #(
             .DATA_WIDTH(DWIDTH),        // Pass parameter DWIDTH
             .ADDR_WIDTH(ADDR_WIDTH)     // Pass parameter ADDR_WIDTH
         ) BRAM_inst (
         .clk(clk),
         .wr_ea(wr_ea_bram),
-        .wr_addr(wrptr[ADDR_WIDTH-1:0]),
+        .addr(addr_bram),
         .data_in(din),
         
         //.rd_ea(rd_ea),
-        .rd_addr(rdptr[READ_WIDTH-1 : RATIOLOG]),
+        //.rd_addr(rdptr[READ_WIDTH-1 : RATIOLOG]),
         .douta(doutbram)
     );
     always_ff @(posedge clk) begin
